@@ -31,7 +31,7 @@ Updated to automatically go through subdirectories as well. Can be disabled from
 
 
 ### Fork:
-This fork aim to make the script importable without modifying it's behaviour when executed directly
+This fork aim to make the script importable without modifying it's behavior when executed directly
 
 
 This code based on repository: [create-vlc-playlist](https://github.com/chitraanshpopli/create-vlc-playlist)
