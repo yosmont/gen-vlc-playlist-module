@@ -1,0 +1,33 @@
+from gen_vlc_playlist import Playlist, Videos
+import os
+import xml.etree.ElementTree as xml
+
+if __name__ = "__main__":
+    videos: Videos = Videos()
+    playlistFolder: str = "/home/yannakin/yannakinrpMNT/home/yannakin/Videos/"
+    playlistFolderList: dict[str, list[str]] = {
+        "2" : [
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed1/2",
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed2/2",
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed4/2"
+        ],
+        "Music" : [
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed1/Music"
+        ],
+        "Video" : [
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed1/Video",
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed2/Video",
+            "/home/yannakin/yannakinrpMNT/media/yannakin/ed4/Backup/Videos"
+        ]
+    }
+    for name, folderList in playlistFolder.items():
+        files: list[str] = []
+        for folderpath in folderList:
+            os.chdir(folderpath)
+            files += videos.get_videos_with_subdir()
+        files = videos.edit_paths(files)
+        playlist: Playlist = Playlist()
+        for path in files:
+            playlist.add_track(path)
+        with open(playlistFolder + name + ".xspf", 'w') as mf:
+            mf.write(xml.tostring(playlist.get_playlist()).decode("utf-8"))
