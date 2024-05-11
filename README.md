@@ -30,5 +30,9 @@ Updated to automatically go through subdirectories as well. Can be disabled from
    to the playlist regardless to them being video or not.
 
 
+### Fork:
+This fork aim to make the script importable without modifying it's behaviour when executed directly
+
+
 This code based on repository: [create-vlc-playlist](https://github.com/chitraanshpopli/create-vlc-playlist)
 
