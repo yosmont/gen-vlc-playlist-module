@@ -7,13 +7,13 @@ import re
 
 # **********************************************************************************
 # Settings
-ext_list = ['.mp4', '.mkv', '.avi', '.flv', '.mov', '.wmv', '.vob', '.mpg','.3gp', '.m4v', '.ts']       #List of extensions to be checked.
+ext_list: list[str] = ['.mp4', '.mkv', '.avi', '.flv', '.mov', '.wmv', '.vob', '.mpg','.3gp', '.m4v', '.ts', '.mp3', '.wav']       #List of extensions to be checked.
 #
-check_subdirectories = True #False        #Set false to get files only from cwd.
-check_sort_file_prefix4 = True      # sort files with prefix ('1. file', `10. file', '100. file')
+check_subdirectories: bool = True #False        #Set false to get files only from cwd.
+check_sort_file_prefix4: bool = False      # sort files with prefix ('1. file', `10. file', '100. file')
 pat_sort_file_prefix4 = r"\/\d+\."  # regex pattern
-check_playlist_web = True
-addr_playlist_web = 'http://192.168.1.1:8080'
+check_playlist_web: bool = False
+addr_playlist_web: str = 'http://192.168.1.1:8080'
 
 # **********************************************************************************
 
@@ -21,7 +21,7 @@ addr_playlist_web = 'http://192.168.1.1:8080'
 class Playlist:
     """Build xml playlist."""
     
-    def __init__(self):
+    def __init__(self) -> None:
     #Defines basic tree structure.
         self.playlist = xml.Element('playlist')
         self.tree = xml.ElementTree(self.playlist)
@@ -36,7 +36,7 @@ class Playlist:
         self.trackList = xml.Element('trackList')
         self.playlist.append(self.trackList)
 
-    def add_track(self, path):
+    def add_track(self, path: str) -> None:
     #Add tracks to xml tree (within trackList).
         track = xml.Element('track')
         location = xml.Element('location')
@@ -53,7 +53,7 @@ class Videos:
     def __init__(self):
         pass
 
-    def remove_nonvideo_files(self,file_list):
+    def remove_nonvideo_files(self, file_list: list[str]) -> list[str]:
     #Removes files whose extension is not mentioned in ext_list from list of files.
         for index,file_name in enumerate(file_list[:]):
             #if file_name.endswith(tuple(ext_list)) or file_name.endswith(tuple(ext_list.upper())) :
@@ -64,16 +64,16 @@ class Videos:
         return file_list
     
     # `C:\Users` to `file:///C:/Users`
-    def edit_paths(self, video_files):
+    def edit_paths(self, video_files: list[str]) -> list[str]:
     #Add path and prefix to files as required in vlc playlist file. 
         for index in range(len(video_files)):
             video_files[index] =( 
             'file:///' + os.path.join(video_files[index])).replace('\\','/')
         return video_files
     
-    def get_videos(self):
+    def get_videos(self, check_sub: bool = True) -> list[str]:
     #Returns list of video files in the directory.
-        if check_subdirectories == True:
+        if check_sub == True:
             pathlist = [os.getcwd()]    #List of all directories to be scanned.
             for root, dirs, files in os.walk(os.getcwd()):
                 for name in dirs:
@@ -101,19 +101,18 @@ class Videos:
             return videos
     
     # !!nk: different sorting
-    def sort_videos(self, video_files):
+    def sort_videos(self, video_files: list[str]) -> list[str]:
         # sort files with prefix ('1. file', `10. file', '100. file')
-        if check_sort_file_prefix4:
-            mo = re.compile(pat_sort_file_prefix4)
-            # _T/www2/24. Предварител
-            #        _  _ # exclude first and last when group
-            video_files.sort(key=lambda x: int(mo.search(x).group()[1:-1] ) )
-            #print(video_files)
-            return video_files
+        mo = re.compile(pat_sort_file_prefix4)
+        # _T/www2/24. Предварител
+        #        _  _ # exclude first and last when group
+        video_files.sort(key=lambda x: int(mo.search(x).group()[1:-1] ) )
+        #print(video_files)
+        return video_files
         
     
     # `C:\Users\videos` to `http://addr:port/videos`
-    def web_paths(self, video_files):
+    def web_paths(self, video_files: list[str]) -> list[str]:
     #Add server addr to files as required in vlc playlist file. 
         web_files = []
         # root directory for web server - current directory
@@ -134,27 +133,29 @@ def printobj(xobj):
 
 
 def main():
-    playlist = Playlist()
-    playlist_web = Playlist()
-    videos = Videos()
+    playlist: Playlist = Playlist()
+    videos: Videos = Videos()
     
 
-    video_files = videos.get_videos()
-    video_paths = videos.edit_paths(video_files)
-    video_sorted = videos.sort_videos(video_paths)
-    web_files = videos.web_paths(video_sorted)
+    files: list[str] = videos.get_videos()
+    files = videos.edit_paths(files, check_subdirectories)
+    if check_sort_file_prefix4:
+        files = videos.sort_videos(files)
     
     # write song.xspf local playlist   
-    for path in video_sorted:    # video_paths
+    for path in files:    # video_paths
         playlist.add_track(path)
     #
     playlist_xml = playlist.get_playlist()
     with open('songs.xspf','w') as mf:
         mf.write(xml.tostring(playlist_xml).decode('utf-8'))
 
+    if check_playlist_web:
+        playlist = Playlist()
+        files = videos.web_paths(files)
     # write songweb.xspf web playlist   
-    for path in web_files:    # video_paths
-        playlist_web.add_track(path)
+    for path in files:    # video_paths
+        playlist.add_track(path)
     #
     playlist_xml = playlist_web.get_playlist()
     with open('songsweb.xspf','w') as mf:
@@ -162,9 +163,8 @@ def main():
 
 
 
-
-    
-main()
+if __name__ = "__main__":
+    main()
 
 '''
 playlist(ROOT)
