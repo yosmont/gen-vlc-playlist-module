@@ -71,34 +71,33 @@ class Videos:
             'file:///' + os.path.join(video_files[index])).replace('\\','/')
         return video_files
     
-    def get_videos(self, check_sub: bool = True) -> list[str]:
+    def get_videos_with_subdir(self) -> list[str]:
     #Returns list of video files in the directory.
-        if check_sub == True:
-            pathlist = [os.getcwd()]    #List of all directories to be scanned.
-            for root, dirs, files in os.walk(os.getcwd()):
-                for name in dirs:
-                        subdir_path = os.path.join(root, name)
-                        if subdir_path.find('\.') != -1:    #Excludes hidden directoriess.
-                            pass
-                        else:
-                            pathlist.append(subdir_path)
-                            
-            videos = []
-            #Loops through files of root directory and every subdirectory.
-            for path in pathlist:
-                all_files = os.listdir(path)
-                for f in self.remove_nonvideo_files(all_files):
-                    location = path+ '\\' + f
-                    videos.append(location)
-            return videos
-            
-        else:
-            videos = []
-            all_files = os.listdir()
+        pathlist = [os.getcwd()]    #List of all directories to be scanned.
+        for root, dirs, files in os.walk(os.getcwd()):
+            for name in dirs:
+                    subdir_path = os.path.join(root, name)
+                    if subdir_path.find('\.') != -1:    #Excludes hidden directoriess.
+                        pass
+                    else:
+                        pathlist.append(subdir_path)
+                        
+        videos: list[str] = []
+        #Loops through files of root directory and every subdirectory.
+        for path in pathlist:
+            all_files = os.listdir(path)
             for f in self.remove_nonvideo_files(all_files):
-                    location = os.getcwd() + '\\' + f
-                    videos.append(location)
-            return videos
+                location = path+ '\\' + f
+                videos.append(location)
+        return videos
+            
+    def get_videos(self) -> list[str]:
+        videos = []
+        all_files = os.listdir()
+        for f in self.remove_nonvideo_files(all_files):
+                location = os.getcwd() + '\\' + f
+                videos.append(location)
+        return videos
     
     # !!nk: different sorting
     def sort_videos(self, video_files: list[str]) -> list[str]:
@@ -137,7 +136,11 @@ def main():
     videos: Videos = Videos()
     
 
-    files: list[str] = videos.get_videos(check_subdirectories)
+    files: list[str] = []
+    if check_subdirectories:
+        files = videos.get_videos_with_subdir()
+    else:
+        files = videos.get_videos()
     files = videos.edit_paths(files)
     if check_sort_file_prefix4:
         files = videos.sort_videos(files)
