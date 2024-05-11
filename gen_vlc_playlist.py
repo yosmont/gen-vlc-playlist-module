@@ -137,8 +137,8 @@ def main():
     videos: Videos = Videos()
     
 
-    files: list[str] = videos.get_videos()
-    files = videos.edit_paths(files, check_subdirectories)
+    files: list[str] = videos.get_videos(check_subdirectories)
+    files = videos.edit_paths(files)
     if check_sort_file_prefix4:
         files = videos.sort_videos(files)
     
