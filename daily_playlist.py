@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 class DailyPlaylistConfig:
     def __init__(self) -> None:
-        self.playlistDuration: int = 12 # the playlist length in hour 
+        self.playlistDuration: int = 24 # the playlist length in hour 
         self.trackDuration: int = 5 # a prediction of the mean duration of a track
         self.trackListSize: int = (self.playlistDuration * 60) / self.trackDuration # how many track put in the playlist 
         self.srcDir: str = "" # path to the folder for get_videos (absolute path ending with '/')
