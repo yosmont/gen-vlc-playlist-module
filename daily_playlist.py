@@ -8,12 +8,12 @@ class DailyPlaylistConfig:
         self.playlistDuration: int = 24 # the playlist length in hour 
         self.trackDuration: int = 5 # a prediction of the mean duration of a track
         self.trackListSize: int = (self.playlistDuration * 60) / self.trackDuration # how many track put in the playlist 
-        self.srcDir: str = "" # path to the folder for get_videos (absolute path ending with '/')
-        self.destDir: str = "" # path to the work folder & final result folder (both use the same folder) (absolute path ending with '/')
+        self.srcDir: str = "/media/yannakin/ed1/Music/" # path to the folder for get_videos (absolute path ending with '/')
+        self.destDir: str = "/home/yannakin/Videos/dailyMusic/" # path to the work folder & final result folder (both use the same folder) (absolute path ending with '/')
         self.trackDirName: str = "tracks" # folder name for where to put the track list files
         self.trackDir: str = self.destDir + self.trackDirName + '/' # absolute path ending with '/' to the trackDir
         self.playlistName: str = "daily.xspf" # playlist file name
-        self.zipName: str = "daily.zip" # zip file name
+        self.zipName: str = "dailyMusic.zip" # zip file name
 
 if __name__ == "__main__":
     conf: DailyPlaylistConfig = DailyPlaylistConfig()
