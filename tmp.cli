@@ -1,4 +1,0 @@
-crontab -e
-
-0 1 * * * python3 /home/yannakin/prog/gen-vlc-playlist-module/daily_playlist.py
-0 2 * * * python3 /home/yannakin/prog/gen-vlc-playlist-module/yannakinrp.py
