@@ -62,6 +62,12 @@ class Videos:
             else:
                 file_list.remove(file_name)
         return file_list
+
+    def abspath_to_relpath(self, video_paths: list[str], destpath: str) -> list[str]:
+    #Replace a list of absolute path to a list of relative path for the destpath folder
+        for index, filepath in enumerate(video_paths[:]):
+            video_paths[index] = os.path.relpath(filepath, destpath)
+        return video_paths
     
     # `C:\Users` to `file:///C:/Users`
     def edit_paths(self, video_files: list[str]) -> list[str]:
