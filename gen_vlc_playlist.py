@@ -7,7 +7,7 @@ import re
 
 # **********************************************************************************
 # Settings
-ext_list: list[str] = ['.mp4', '.mkv', '.avi', '.flv', '.mov', '.wmv', '.vob', '.mpg','.3gp', '.m4v', '.ts', '.mp3', '.wav']       #List of extensions to be checked.
+ext_list: list[str] = ['.mp4', '.mkv', '.avi', '.flv', '.mov', '.wmv', '.vob', '.mpg','.3gp', '.m4v', '.ts', '.mp3', '.wav', '.m4a']       #List of extensions to be checked.
 #
 check_subdirectories: bool = True #False        #Set false to get files only from cwd.
 check_sort_file_prefix4: bool = False      # sort files with prefix ('1. file', `10. file', '100. file')
